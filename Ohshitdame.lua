@@ -1,38 +1,24 @@
--- ================== WAIT GAME LOAD ==================
+-- ===== WAIT GAME LOAD =====
 if not game:IsLoaded() then
 	game.Loaded:Wait()
 end
-repeat task.wait() until game.Players.LocalPlayer
-repeat task.wait() until game.Players.LocalPlayer:FindFirstChild("PlayerGui")
 
--- ================== SERVICES ==================
 local Players = game:GetService("Players")
 local StarterGui = game:GetService("StarterGui")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local SoundService = game:GetService("SoundService")
 
--- ================== LOADING LOG ==================
-print("Loading Redz-Inspired Toxic Chill Hub... [0%]")
-task.wait(0.3)
-print("Loading Kavo UI & Services... [20%]")
-task.wait(0.4)
-print("Preparing Toxic Emotes... [40%]")
-task.wait(0.3)
-print("Adding Chill Music & Fake Features... [60%]")
-task.wait(0.4)
-print("Setting up S4 S8 Upgrade & Visuals... [80%]")
-task.wait(0.3)
-print("Hub Loaded Successfully! [100%] 🗿💦")
+local player = Players.LocalPlayer
+repeat task.wait() until player:FindFirstChild("PlayerGui")
 
--- ================== LOAD KAVO ==================
+-- ===== LOAD KAVO UI =====
 local Kavo = loadstring(game:HttpGet(
 	"https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"
 ))()
 
-local Window = Kavo:CreateLib("Redz-Inspired Toxic Chill Hub 🗿💦", "Ocean")
+local Window = Kavo:CreateLib("Toxic Chill Hub", "Ocean")
 
--- ================== PLAYER ==================
-local player = Players.LocalPlayer
+-- ===== PLAYER =====
 local char = player.Character or player.CharacterAdded:Wait()
 local hum = char:WaitForChild("Humanoid")
 
@@ -41,31 +27,34 @@ player.CharacterAdded:Connect(function(c)
 	hum = c:WaitForChild("Humanoid")
 end)
 
--- ================== STATES ==================
+-- ===== STATES =====
 local currentAnim
 local currentSound
 local spamRunning = false
 local rainbowRunning = false
 
--- ================== NOTIFY ==================
-local function notify(title, text)
+-- ===== NOTIFY =====
+local function notify(t, m)
 	pcall(function()
 		StarterGui:SetCore("SendNotification", {
-			Title = title,
-			Text = text,
-			Duration = 4
+			Title = t,
+			Text = m,
+			Duration = 3
 		})
 	end)
 end
 
--- ================== TOXIC EMOTE ==================
+-- =================================================
+-- TOXIC EMOTE
+-- =================================================
 local ToxicTab = Window:NewTab("Toxic Emote")
-local ToxicSection = ToxicTab:NewSection("Toxic Emotes (Local)")
+local ToxicSection = ToxicTab:NewSection("Emotes")
 
 local anims = {
 	{name="Sóc Lọ", id="rbxassetid://2315836946", speed=2.5},
 	{name="Trực Thăng", id="rbxassetid://180436148", speed=3},
 	{name="Twerk", id="rbxassetid://2897268926", speed=2},
+	{name="Dí Người", id="rbxassetid://507770677", speed=1.5},
 	{name="Fly Pose", id="rbxassetid://2510238624", speed=1},
 	{name="Macarena", id="rbxassetid://128778091", speed=1.5},
 }
@@ -81,7 +70,7 @@ local function playAnim(data)
 	currentAnim.Looped = true
 	currentAnim:AdjustSpeed(data.speed)
 	currentAnim:Play()
-	notify("Emote", data.name.." 🗿")
+	notify("Emote", data.name)
 end
 
 for _,a in ipairs(anims) do
@@ -94,7 +83,9 @@ ToxicSection:NewButton("Stop Emote", "", function()
 	if currentAnim then currentAnim:Stop() end
 end)
 
--- ================== CHILL MUSIC ==================
+-- =================================================
+-- CHILL MUSIC
+-- =================================================
 local ChillTab = Window:NewTab("Chill Music")
 local ChillSection = ChillTab:NewSection("Local Music")
 
@@ -115,7 +106,7 @@ local function playMusic(song)
 	currentSound.Looped = true
 	currentSound.Parent = SoundService
 	currentSound:Play()
-	notify("Music", song.name.." 🎧")
+	notify("Music", song.name)
 end
 
 for _,s in ipairs(songs) do
@@ -128,27 +119,29 @@ ChillSection:NewSlider("Volume", "", 100, 0, function(v)
 	if currentSound then currentSound.Volume = v/100 end
 end)
 
-ChillSection:NewToggle("Pause / Play", "", function(state)
-	if currentSound then
-		if state then currentSound:Pause() else currentSound:Play() end
-	end
+ChillSection:NewButton("Stop Music", "", function()
+	if currentSound then currentSound:Stop() end
 end)
 
--- ================== FAKE LUCK ==================
+-- =================================================
+-- FAKE LUCK
+-- =================================================
 local LuckTab = Window:NewTab("Fake Luck")
 local LuckSection = LuckTab:NewSection("Fake Booster")
 
 LuckSection:NewToggle("x10 Luck", "", function(state)
-	notify("Luck", state and "x10 ON 💰" or "OFF")
+	notify("Luck", state and "x10 ON" or "OFF")
 end)
 
 LuckSection:NewButton("Random x5-x100", "", function()
-	notify("Luck", "x"..math.random(5,100).." 🎲")
+	notify("Luck", "x"..math.random(5,100))
 end)
 
--- ================== S4 S8 ==================
+-- =================================================
+-- S4 / S8
+-- =================================================
 local STab = Window:NewTab("S4 & S8")
-local SSection = STab:NewSection("Sóc Lọ Pro")
+local SSection = STab:NewSection("Upgrade")
 
 SSection:NewButton("S4 Slow", "", function()
 	playAnim({id="rbxassetid://2315836946", speed=1})
@@ -158,9 +151,11 @@ SSection:NewButton("S8 Fast", "", function()
 	playAnim({id="rbxassetid://2315836946", speed=5})
 end)
 
--- ================== VISUAL ==================
+-- =================================================
+-- VISUAL
+-- =================================================
 local VisualTab = Window:NewTab("Visual")
-local VisualSection = VisualTab:NewSection("Local Effects")
+local VisualSection = VisualTab:NewSection("Effects")
 
 VisualSection:NewToggle("Rainbow Glow", "", function(state)
 	rainbowRunning = state
@@ -174,10 +169,16 @@ VisualSection:NewToggle("Rainbow Glow", "", function(state)
 			end
 			if hl then hl:Destroy() end
 		end)
+	else
+		if char:FindFirstChild("Highlight") then
+			char.Highlight:Destroy()
+		end
 	end
 end)
 
--- ================== SPAM ==================
+-- =================================================
+-- SPAM CHAT
+-- =================================================
 local SpamTab = Window:NewTab("Spam")
 local SpamSection = SpamTab:NewSection("Chat Spam")
 
@@ -186,13 +187,10 @@ SpamSection:NewToggle("Auto Spam", "", function(state)
 	if state then
 		task.spawn(function()
 			while spamRunning do
-				ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(
-					"sóc lọ 🗿💦", "All"
-				)
+				ReplicatedStorage.DefaultChatSystemChatEvents
+					.SayMessageRequest:FireServer("sóc lọ 🗿", "All")
 				task.wait(3)
 			end
 		end)
 	end
 end)
-
-print("Script by AnhPhongLo")
